@@ -108,10 +108,6 @@
 </a>
 
 <style>
-  @tailwind base;
-  @tailwind components;
-  @tailwind utilities;
-
   h1 {
     font-size: 2.5rem;
     margin: 2rem 0;
