@@ -2,6 +2,7 @@
 // TODO use some advanced table component that allows for showing & hiding columns (carbs etc)
 // TODO loading state
 // TODO filters by percentile protein, rating, etc.
+import { PUBLIC_AUTH_TOKEN } from '$env/static/public';
 import type { PageLoad } from './$types';
 
 const IMG_CDN_URL = 'https://dccore.ntfy.pl/upload/multimedia';
@@ -142,7 +143,6 @@ function toISOJustDate(date: Date) {
 }
 
 export const load: PageLoad = async ({ fetch, params }) => {
-  const AUTH_TOKEN = '';
   const URL = 'https://dccore.ntfy.pl/v3/menu?sizes=%5B31%2C34%2C39%2C42%2C46%5D&withServingIngredients=true';
 
   const dateString = params.date;
@@ -157,7 +157,7 @@ export const load: PageLoad = async ({ fetch, params }) => {
     const response = await fetch(`${URL}&date=${dateString}`, {
       headers: {
         Accept: 'application/json',
-        authorization: `Bearer ${AUTH_TOKEN}`,
+        authorization: `Bearer ${PUBLIC_AUTH_TOKEN}`,
       },
     });
     const jsonResponse = await response.json();
