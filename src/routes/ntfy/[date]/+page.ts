@@ -1,7 +1,6 @@
 // TODO (sticky) anchor links to each meal header
 // TODO use some advanced table component that allows for showing & hiding columns (carbs etc)
 // TODO loading state
-// TODO delete dishes from view
 // TODO filters by percentile protein, rating, etc.
 import type { PageLoad } from './$types';
 
@@ -20,7 +19,7 @@ type ValueAndColor = {
   value: number;
 }
 
-type Meal = {
+type MealOption = {
   id: number;
   link: string;
   name: string;
@@ -46,10 +45,10 @@ function calculateHSL(value: number, min: number, max: number) {
   const percent = shift / (max - min);
   const hue = percent * (MAX_HUE - MIN_HUE) + MIN_HUE;
 
-  return `hsl(${hue}, 60%, 70%, .9)`;
+  return `hsl(${hue}, 60%, 70%, .95)`;
 }
 
-function colorAttributes(meals: Array<Meal>) {
+function colorAttributes(meals: Array<MealOption>) {
   const singularValues: {
     rating: Array<number>,
     protein: Array<number>,
@@ -81,7 +80,7 @@ function colorAttributes(meals: Array<Meal>) {
   });
 }
 
-function ntfySort(left: Meal, right: Meal) {
+function ntfySort(left: MealOption, right: MealOption) {
   if (left.variant === MY_VARIANT) {
     return -1;
   }
@@ -93,8 +92,8 @@ function ntfySort(left: Meal, right: Meal) {
 }
 
 function processMeals(meals) {
-  const normalizedMeals: { [index: number]: Meal[] } = meals.reduce(
-    function reduceMeal(acc: { [index: number]: Array<Meal> }, meal): { [index: number]: Array<Meal> } {
+  const normalizedMeals: { [index: number]: MealOption[] } = meals.reduce(
+    function reduceMealOption(acc: { [index: number]: Array<MealOption> }, meal): { [index: number]: Array<MealOption> } {
       acc[meal.mealType].push({
         id: meal.serving.id,
         link: meal.serving.shareLink,
@@ -111,7 +110,7 @@ function processMeals(meals) {
         saturatedFat: { value: meal.serving.nutritionalValue[3].value },
         position: meal.position,
         variant: meal.variant,
-      } as Meal);
+      } as MealOption);
       return acc;
     },
     { 1: [], 2: [], 3: [], 4: [], 5: []},
@@ -142,7 +141,7 @@ function toISOJustDate(date: Date) {
   return dateString.substring(0, dateString.indexOf('T'));
 }
 
-export const load: PageLoad = async ({ params }) => {
+export const load: PageLoad = async ({ fetch, params }) => {
   const AUTH_TOKEN = '';
   const URL = 'https://dccore.ntfy.pl/v3/menu?sizes=%5B31%2C34%2C39%2C42%2C46%5D&withServingIngredients=true';
 

@@ -2,6 +2,12 @@
 	import type { PageData } from './$types';
 
 	let { data }: { data: PageData } = $props();
+
+  let dishes = $state(data.dishData);
+
+  function removeOption(mealIndex: number, mealIndexVertical: number) {
+    dishes[mealIndex].splice(mealIndexVertical, 1);
+  }
 </script>
 
 <svelte:head>
@@ -26,13 +32,14 @@
     </div>
 
     <div>
-      {#each Object.values(data.dishData) as mealOptions, index}
-        <h2 id={data.mealNames[index]}>
-          {data.mealNames[index]}
+      {#each Object.values(dishes) as mealOptions, mealIndex}
+        <h2 id={data.mealNames[mealIndex]}>
+          {data.mealNames[mealIndex]}
         </h2>
         <table class="meals">
           <thead>
             <tr>
+              <th></th>
               <th>Nazwa</th>
               <th></th>
               <th class="meal-numerical">Ocena</th>
@@ -41,38 +48,44 @@
             </tr>
           </thead>
           <tbody>
-            {#each mealOptions as meal}
+            {#each mealOptions as mealOption, mealOptionIndex}
               <tr>
+                <td
+                  class="remove-button"
+                  onclick={() => removeOption(mealIndex + 1, mealOptionIndex)}
+                >
+                  <span>🗑️</span>
+                </td>
                 <td class="meal-name">
-                  {meal.name}
+                  {mealOption.name}
                 </td>
                 <td class="meal-image">
-                  <a href={meal.link} target="_blank" rel="noopener noreferrer">
+                  <a href={mealOption.link} target="_blank" rel="noopener noreferrer">
                     <img
-                      alt={meal.name.substr(0, meal.name.indexOf(' '))}
+                      alt={mealOption.name.substr(0, mealOption.name.indexOf(' '))}
                       class="img-main"
-                      src={meal.imgSquareLink}
+                      src={mealOption.imgSquareLink}
                     />
                     <img
-                      alt={meal.name.substr(0, meal.name.indexOf(' '))}
+                      alt={mealOption.name.substr(0, mealOption.name.indexOf(' '))}
                       class="img-alternative"
-                      src={meal.imgRealLink}
+                      src={mealOption.imgRealLink}
                     />
                   </a>
                 </td>
                 <td class="meal-numerical">
-                  <div class="meal-numerical-color" style={`background: ${meal.rating.color}`}>
-                    {meal.rating.value.toFixed(2)}
+                  <div class="meal-numerical-color" style={`background: ${mealOption.rating.color}`}>
+                    {mealOption.rating.value.toFixed(2)}
                   </div>
                 </td>
                 <td class="meal-numerical">
-                  <div class="meal-numerical-color" style={`background: ${meal.protein.color}`}>
-                    {Math.round(meal.protein.value)}
+                  <div class="meal-numerical-color" style={`background: ${mealOption.protein.color}`}>
+                    {Math.round(mealOption.protein.value)}
                   </div>
                 </td>
                 <td class="meal-numerical">
-                  <div class="meal-numerical-color" style={`background: ${meal.saturatedFat.color}`}>
-                    {Math.round(meal.saturatedFat.value)}
+                  <div class="meal-numerical-color" style={`background: ${mealOption.saturatedFat.color}`}>
+                    {Math.round(mealOption.saturatedFat.value)}
                   </div>
                 </td>
               </tr>
@@ -118,9 +131,36 @@
   .meals {
     margin-bottom: 5rem;
 
+    .remove-button {
+      cursor: pointer;
+      padding: 0 .5em;
+
+      span {
+        visibility: hidden;
+      }
+    }
+
     tbody {
+      tr {
+        &:nth-child(odd) {
+          background: theme('colors.gray.100 / 0.4');
+        }
+
+        &:nth-child(even) {
+          background: theme('colors.gray.200 / 0.4');
+        }
+      }
+
       tr:hover {
         background: theme('colors.sky.300 / 0.2');
+
+        .remove-button {
+          background: theme('colors.rose.200 / 0.8');
+
+          span {
+            visibility: visible;
+          }
+        }
       }
     }
 
@@ -131,6 +171,7 @@
     .meal-name {
       text-align: left;
       max-width: 450px;
+      padding: 0 .5em;
     }
 
     .meal-numerical {
