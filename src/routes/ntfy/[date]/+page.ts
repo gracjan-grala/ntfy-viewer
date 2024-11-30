@@ -1,6 +1,5 @@
 // TODO (sticky) anchor links to each meal header
 // TODO use some advanced table component that allows for showing & hiding columns (carbs etc)
-// TODO loading state
 // TODO filters by percentile protein, rating, etc.
 import { PUBLIC_AUTH_TOKEN } from '$env/static/public';
 import type { PageLoad } from './$types';

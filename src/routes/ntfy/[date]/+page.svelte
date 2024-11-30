@@ -1,12 +1,23 @@
 <script lang="ts">
 	import type { PageData } from './$types';
+  import Spinner from '../../Spinner.svelte';
 
 	let { data }: { data: PageData } = $props();
 
-  let dishes = $state(data.dishData);
+  let dishes = $state({});
+  let loading = $state(true);
+
+  $effect(() => {
+    dishes = data.dishData;
+    loading = false;
+  });
 
   function removeOption(mealIndex: number, mealIndexVertical: number) {
     dishes[mealIndex].splice(mealIndexVertical, 1);
+  }
+
+  function switchDay() {
+    loading = true;
   }
 </script>
 
@@ -17,7 +28,9 @@
 
 <a
   class="flex justify-center items-center w-full h-full hover:bg-lime-200/50 hover:no-underline"
+  class:cursor-not-allowed={loading}
   href={data.prevDayLink}
+  onclick={switchDay}
 >
   <div class="text-7xl text-slate-600">
     ←
@@ -27,80 +40,88 @@
 <div class="h-full flex flex-initial flex-col">
   <div class="h-full meals-list overflow-scroll">
 
-    <div>
-      <h1>Jadłospis {data.date}</h1>
-    </div>
+    {#if loading}
+      <div class="flex justify-center items-center h-full">
+        <Spinner />
+      </div>
+    {:else}
+      <div>
+        <h1>Jadłospis {data.date}</h1>
+      </div>
 
-    <div>
-      {#each Object.values(dishes) as mealOptions, mealIndex}
-        <h2 id={data.mealNames[mealIndex]}>
-          {data.mealNames[mealIndex]}
-        </h2>
-        <table class="meals">
-          <thead>
-            <tr>
-              <th></th>
-              <th>Nazwa</th>
-              <th></th>
-              <th class="meal-numerical">Ocena</th>
-              <th class="meal-numerical">Białko</th>
-              <th class="meal-numerical">Tłuszcze nas.</th>
-            </tr>
-          </thead>
-          <tbody>
-            {#each mealOptions as mealOption, mealOptionIndex}
+      <div>
+        {#each Object.values(dishes) as mealOptions, mealIndex}
+          <h2 id={data.mealNames[mealIndex]}>
+            {data.mealNames[mealIndex]}
+          </h2>
+          <table class="meals">
+            <thead>
               <tr>
-                <td
-                  class="remove-button"
-                  onclick={() => removeOption(mealIndex + 1, mealOptionIndex)}
-                >
-                  <span>🗑️</span>
-                </td>
-                <td class="meal-name">
-                  {mealOption.name}
-                </td>
-                <td class="meal-image">
-                  <a href={mealOption.link} target="_blank" rel="noopener noreferrer">
-                    <img
-                      alt={mealOption.name.substr(0, mealOption.name.indexOf(' '))}
-                      class="img-main"
-                      src={mealOption.imgSquareLink}
-                    />
-                    <img
-                      alt={mealOption.name.substr(0, mealOption.name.indexOf(' '))}
-                      class="img-alternative"
-                      src={mealOption.imgRealLink}
-                    />
-                  </a>
-                </td>
-                <td class="meal-numerical">
-                  <div class="meal-numerical-color" style={`background: ${mealOption.rating.color}`}>
-                    {mealOption.rating.value.toFixed(2)}
-                  </div>
-                </td>
-                <td class="meal-numerical">
-                  <div class="meal-numerical-color" style={`background: ${mealOption.protein.color}`}>
-                    {Math.round(mealOption.protein.value)}
-                  </div>
-                </td>
-                <td class="meal-numerical">
-                  <div class="meal-numerical-color" style={`background: ${mealOption.saturatedFat.color}`}>
-                    {Math.round(mealOption.saturatedFat.value)}
-                  </div>
-                </td>
+                <th></th>
+                <th>Nazwa</th>
+                <th></th>
+                <th class="meal-numerical">Ocena</th>
+                <th class="meal-numerical">Białko</th>
+                <th class="meal-numerical">Tłuszcze nas.</th>
               </tr>
-            {/each}
-          </tbody>
-        </table>
-      {/each}
-    </div>
+            </thead>
+            <tbody>
+              {#each mealOptions as mealOption, mealOptionIndex}
+                <tr>
+                  <td
+                    class="remove-button"
+                    onclick={() => removeOption(mealIndex + 1, mealOptionIndex)}
+                  >
+                    <span>🗑️</span>
+                  </td>
+                  <td class="meal-name">
+                    {mealOption.name}
+                  </td>
+                  <td class="meal-image">
+                    <a href={mealOption.link} target="_blank" rel="noopener noreferrer">
+                      <img
+                        alt={mealOption.name.substr(0, mealOption.name.indexOf(' '))}
+                        class="img-main"
+                        src={mealOption.imgSquareLink}
+                      />
+                      <img
+                        alt={mealOption.name.substr(0, mealOption.name.indexOf(' '))}
+                        class="img-alternative"
+                        src={mealOption.imgRealLink}
+                      />
+                    </a>
+                  </td>
+                  <td class="meal-numerical">
+                    <div class="meal-numerical-color" style={`background: ${mealOption.rating.color}`}>
+                      {mealOption.rating.value.toFixed(2)}
+                    </div>
+                  </td>
+                  <td class="meal-numerical">
+                    <div class="meal-numerical-color" style={`background: ${mealOption.protein.color}`}>
+                      {Math.round(mealOption.protein.value)}
+                    </div>
+                  </td>
+                  <td class="meal-numerical">
+                    <div class="meal-numerical-color" style={`background: ${mealOption.saturatedFat.color}`}>
+                      {Math.round(mealOption.saturatedFat.value)}
+                    </div>
+                  </td>
+                </tr>
+              {/each}
+            </tbody>
+          </table>
+        {/each}
+      </div>
 
+    {/if}
   </div>
 </div>
 
 <a
   class="flex justify-center items-center w-full h-full hover:bg-lime-200/50 hover:no-underline"
+  class:cursor-not-allowed={loading}
   href={data.nextDayLink}
+  onclick={switchDay}
 >
   <div class="text-7xl text-slate-600">
     →
