@@ -1,6 +1,7 @@
 <script lang="ts">
 	import type { PageData } from './$types';
   import Spinner from '../../Spinner.svelte';
+  import { MEAL_NAMES } from '$lib/ntfyMeal';
 
 	let { data }: { data: PageData } = $props();
 
@@ -51,8 +52,8 @@
 
       <div>
         {#each Object.values(dishes) as mealOptions, mealIndex}
-          <h2 id={data.mealNames[mealIndex]}>
-            {data.mealNames[mealIndex]}
+          <h2 id={MEAL_NAMES[mealIndex]}>
+            {MEAL_NAMES[mealIndex]}
           </h2>
           <table class="meals">
             <thead>
