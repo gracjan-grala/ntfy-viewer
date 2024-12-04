@@ -20,6 +20,9 @@ export async function getMealOptionsForDay(date: string, fetch: LoadEvent['fetch
   });
 
   const jsonResponse = await response.json();
+  if (response.status >= 400) {
+    throw Error(jsonResponse.message);
+  }
   const dishData = processMeals(parseMeals(jsonResponse.meals));
 
   DATABASE[date] = dishData;

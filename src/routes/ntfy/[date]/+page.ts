@@ -1,6 +1,3 @@
-// TODO (sticky) anchor links to each meal header
-// TODO use some advanced table component that allows for showing & hiding columns (carbs etc)
-// TODO filters by percentile protein, rating, etc.
 import type { PageLoad } from './$types';
 import { getMealOptionsForDay } from '$lib/mealDbAdapter';
 import { offsetDays, toISOJustDate } from '$lib/utils';

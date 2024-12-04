@@ -47,7 +47,7 @@
       </div>
     {:else}
       <div>
-        <h1>Jadłospis {data.date}</h1>
+        <h1>Jadłospis {data.date} ({new Intl.DateTimeFormat('pl-PL', { weekday: 'long'}).format(new Date(data.date))})</h1>
       </div>
 
       <div>
@@ -75,7 +75,10 @@
                   >
                     <span>🗑️</span>
                   </td>
-                  <td class="meal-name">
+                  <td
+                    class="meal-name remove-button"
+                    onclick={() => removeOption(mealIndex + 1, mealOptionIndex)}
+                  >
                     {mealOption.name}
                   </td>
                   <td class="meal-image">

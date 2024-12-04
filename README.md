@@ -1,38 +1,26 @@
-# sv
+# NTFY Viewer
 
-Everything you need to build a Svelte project, powered by [`sv`](https://github.com/sveltejs/cli).
+The purpose of this project is to facilitate the selection of meals for NTFY catering subscribers,
+based on the contents of protein and saturated fats, as well as the general user rating.
 
-## Creating a project
+## Running it
 
-If you're seeing this, you've probably already done this step. Congrats!
+0. (If you don't have it, install `yarn`)
+```npm install -g yarn```
+1. Install dependencies
+```yarn install```
+2. Go to [app.ntfy.pl](https://app.ntfy.pl/) and log in
+3. Open the browser dev tools, refresh the page and find an XHR GET request. Copy the value of
+   the `authorization` header (skip the `Bearer ` part) into the `.env` file as the value of
+   the `PUBLIC_AUTH_TOKEN` variable (as in `.env.example`)
+4. Run the application and enjoy
+```yarn dev --open```
+5. Tokens are good for 14 days - you'll have to log in and refresh it every now and then.
 
-```bash
-# create a new project in the current directory
-npx sv create
+![screenshot](screenshot.png)
 
-# create a new project in my-app
-npx sv create my-app
-```
-
-## Developing
-
-Once you've created a project and installed dependencies with `npm install` (or `pnpm install` or `yarn`), start a development server:
-
-```bash
-npm run dev
-
-# or start the server and open the app in a new browser tab
-npm run dev -- --open
-```
-
-## Building
-
-To create a production version of your app:
-
-```bash
-npm run build
-```
-
-You can preview the production build with `npm run preview`.
-
-> To deploy your app, you may need to install an [adapter](https://svelte.dev/docs/kit/adapters) for your target environment.
+## To do
+- [ ] (sticky) anchor links to each meal header
+- [ ] use some advanced table component that allows for showing & hiding columns (carbs etc)
+- [ ] filters by percentile protein, rating, etc.
+- [ ] general score mode (based on nutrition facts)
