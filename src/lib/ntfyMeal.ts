@@ -1,4 +1,4 @@
-import { calculateHSL } from '$lib/utils';
+import { calculateHSL, colorDescription } from '$lib/utils';
 
 const IMG_CDN_URL = 'https://dccore.ntfy.pl/upload/multimedia';
 const MY_VARIANT = 17;
@@ -60,6 +60,7 @@ export function mealOptionFromObject(mealObj: ApiMeal): MealOption {
     id: mealObj.serving.id,
     link: mealObj.serving.shareLink,
     name: mealObj.serving.meal.name,
+    coloredDescription: colorDescription(mealObj.serving.meal.name),
     rating: { value: mealObj.serving.meal.rate },
     imgRealLink: `${IMG_CDN_URL}/${mealObj.serving.images.CLIENT_MULTIMEDIA.name}`,
     imgSquareLink: `${IMG_CDN_URL}/${mealObj.serving.images.MULTIMEDIA_SQUARE.name}`,

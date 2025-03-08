@@ -17,6 +17,18 @@ based on the contents of protein and saturated fats, as well as the general user
 ```yarn dev --open```
 5. Tokens are good for 14 days - you'll have to log in and refresh it every now and then.
 
+## Features
+
+### Green list and red list
+
+In order to automatically color certain keywords (of the description) green and red, modify your
+`.env` file according to [the example](.env.example) and fill the `PUBLIC_GREENLIST` and
+`PUBLIC_REDLIST` variables with foods you like/dislike, divided by the `|` sign.
+
+(Tip: It's actually a regex and more complex expressions are allowed.
+
+### What it looks like
+
 ![screenshot](screenshot.png)
 
 ## To do

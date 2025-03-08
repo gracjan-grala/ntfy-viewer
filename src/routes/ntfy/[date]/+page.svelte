@@ -79,7 +79,7 @@
                     class="meal-name remove-button"
                     onclick={() => removeOption(mealIndex + 1, mealOptionIndex)}
                   >
-                    {mealOption.name}
+                    {@html mealOption.coloredDescription}
                   </td>
                   <td class="meal-image">
                     <a href={mealOption.link} target="_blank" rel="noopener noreferrer">
@@ -97,7 +97,7 @@
                   </td>
                   <td class="meal-numerical">
                     <div class="meal-numerical-color" style={`background: ${mealOption.rating.color}`}>
-                      {mealOption.rating.value.toFixed(2)}
+                      {mealOption.rating.value > 0 ? mealOption.rating.value.toFixed(2) : '-'}
                     </div>
                   </td>
                   <td class="meal-numerical">
