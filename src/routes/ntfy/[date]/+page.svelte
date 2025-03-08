@@ -28,12 +28,12 @@
 </svelte:head>
 
 <a
-  class="flex justify-center items-center w-full h-full hover:bg-lime-200/50 hover:no-underline"
+  class="flex justify-center items-center w-full h-full hover:bg-yellow-200/60 hover:no-underline"
   class:cursor-not-allowed={loading}
   href={data.prevDayLink}
   onclick={switchDay}
 >
-  <div class="text-7xl text-slate-600">
+  <div class="text-7xl">
     ←
   </div>
 </a>
@@ -122,20 +122,21 @@
 </div>
 
 <a
-  class="flex justify-center items-center w-full h-full hover:bg-lime-200/50 hover:no-underline"
+  class="flex justify-center items-center w-full h-full hover:bg-yellow-200/60 hover:no-underline"
   class:cursor-not-allowed={loading}
   href={data.nextDayLink}
   onclick={switchDay}
 >
-  <div class="text-7xl text-slate-600">
+  <div class="text-7xl">
     →
   </div>
 </a>
 
 <style>
   h1 {
+    background: rgba(250, 222, 25, .85);
     font-size: 2.5rem;
-    margin: 2rem 0;
+    padding: 2rem 0;
   }
 
   h2 {
@@ -190,8 +191,9 @@
     }
 
     .meal-name {
+      font-size: 1.1rem;
       text-align: left;
-      max-width: 450px;
+      width: 450px;
       padding: 0 .5em;
     }
 
