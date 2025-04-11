@@ -61,6 +61,7 @@
                 <th></th>
                 <th>Nazwa</th>
                 <th></th>
+                <th class="meal-numerical">Andrzej Score™</th>
                 <th class="meal-numerical">Ocena</th>
                 <th class="meal-numerical">Białko</th>
                 <th class="meal-numerical">Tłuszcze nas.</th>
@@ -79,6 +80,7 @@
                     class="meal-name remove-button"
                     onclick={() => removeOption(mealIndex + 1, mealOptionIndex)}
                   >
+                    <!-- eslint-disable-next-line svelte/no-at-html-tags -->
                     {@html mealOption.coloredDescription}
                   </td>
                   <td class="meal-image">
@@ -96,17 +98,22 @@
                     </a>
                   </td>
                   <td class="meal-numerical">
-                    <div class="meal-numerical-color" style={`background: ${mealOption.rating.color}`}>
+                    <div class="meal-numerical-color" style={`background: ${mealOption.generalScore.color}`}>
+                      {Math.round(mealOption.generalScore.value)}
+                    </div>
+                  </td>
+                  <td class="meal-numerical">
+                    <div class="faded meal-numerical-color" style={`background: ${mealOption.rating.color}`}>
                       {mealOption.rating.value > 0 ? mealOption.rating.value.toFixed(2) : '-'}
                     </div>
                   </td>
                   <td class="meal-numerical">
-                    <div class="meal-numerical-color" style={`background: ${mealOption.protein.color}`}>
+                    <div class="faded meal-numerical-color" style={`background: ${mealOption.protein.color}`}>
                       {Math.round(mealOption.protein.value)}
                     </div>
                   </td>
                   <td class="meal-numerical">
-                    <div class="meal-numerical-color" style={`background: ${mealOption.saturatedFat.color}`}>
+                    <div class="faded meal-numerical-color" style={`background: ${mealOption.saturatedFat.color}`}>
                       {Math.round(mealOption.saturatedFat.value)}
                     </div>
                   </td>
@@ -198,11 +205,17 @@
     }
 
     .meal-numerical {
-      width: 128px;
+      width: 90px;
     }
 
     .meal-numerical-color {
-      padding: 20px 0;
+      padding: 18px 0;
+      border-radius: 36px;
+      font-size: 1.05rem;
+    }
+
+    .faded {
+      opacity: .7;
     }
 
     .meal-image {

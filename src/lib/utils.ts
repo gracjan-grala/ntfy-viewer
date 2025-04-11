@@ -25,7 +25,7 @@ export function calculateHSL(value: number, min: number, max: number): string {
   const percent = shift / (max - min);
   const hue = percent * (MAX_HUE - MIN_HUE) + MIN_HUE;
 
-  return `hsl(${hue}, 60%, 70%, .95)`;
+  return `hsl(${hue}, 70%, 67%, .95)`;
 }
 
 export function colorDescription(description: string): string {

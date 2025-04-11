@@ -1,4 +1,5 @@
 import { calculateHSL, colorDescription } from '$lib/utils';
+import { assignScores } from '$lib/score';
 
 const IMG_CDN_URL = 'https://dccore.ntfy.pl/upload/multimedia';
 const MY_VARIANT = 17;
@@ -28,6 +29,10 @@ export type ApiMeal = {
       name: string;
       value: number;
     }[];
+    nutritionalValue100g: {
+      name: string;
+      value: number;
+    }[];
     images: {
       CLIENT_MULTIMEDIA: { name: string };
       MULTIMEDIA_SQUARE: { name: string };
@@ -41,16 +46,24 @@ export type MealOption = {
   id: number;
   link: string;
   name: string;
+  coloredDescription: string;
   rating: ValueAndColor;
   imgRealLink: string;
   imgSquareLink: string;
   carbs: ValueAndColor;
   fat: ValueAndColor;
   fiber: ValueAndColor;
+  generalScore?: ValueAndColor,
   kcal: ValueAndColor;
+  per100g: {
+    fat: number;
+    fiber: number;
+    saturatedFat: number;
+  },
   protein: ValueAndColor;
   salt: ValueAndColor;
   saturatedFat: ValueAndColor;
+  simpleSugars: ValueAndColor;
   position: number;
   variant: number;
 };
@@ -68,9 +81,15 @@ export function mealOptionFromObject(mealObj: ApiMeal): MealOption {
     fat: { value: mealObj.serving.nutritionalValue[2].value },
     fiber: { value: mealObj.serving.nutritionalValue[6].value },
     kcal: { value: mealObj.serving.nutritionalValue[0].value },
+    per100g: {
+      fat: mealObj.serving.nutritionalValue100g[2].value,
+      fiber: mealObj.serving.nutritionalValue100g[6].value,
+      saturatedFat: mealObj.serving.nutritionalValue100g[3].value,
+    },
     protein: { value: mealObj.serving.nutritionalValue[7].value },
     salt: { value: mealObj.serving.nutritionalValue[8].value },
     saturatedFat: { value: mealObj.serving.nutritionalValue[3].value },
+    simpleSugars: { value: mealObj.serving.nutritionalValue[5].value },
     position: mealObj.position,
     variant: mealObj.variant,
   };
@@ -88,10 +107,11 @@ export function parseMeals(meals: ApiMeal[]): { [index: number]: MealOption[] } 
 
 export function colorAttributes(meals: MealOption[]) {
   const singularValues: {
+    generalScore: number[],
     rating: number[],
     protein: number[],
     saturatedFat: number[],
-  } = ['rating', 'protein',  'saturatedFat'].reduce(
+  } = ['generalScore', 'rating', 'protein',  'saturatedFat'].reduce(
     function(acc, attribute) {
       acc[attribute] = meals.map((meal) => meal[attribute].value);
       return acc;
@@ -102,6 +122,10 @@ export function colorAttributes(meals: MealOption[]) {
   return meals.map(function colorMealOptions(meal) {
     return {
       ...meal,
+      generalScore: {
+        value: meal.generalScore.value,
+        color: calculateHSL(meal.generalScore.value, Math.min(...singularValues.generalScore), Math.max(...singularValues.generalScore)),
+      },
       rating: {
         value: meal.rating.value,
         color: calculateHSL(meal.rating.value, Math.min(...singularValues.rating), Math.max(...singularValues.rating)),
@@ -118,7 +142,7 @@ export function colorAttributes(meals: MealOption[]) {
   });
 }
 
-export function deduplicate(mealOptions: MealOption[]) {
+export function deduplicate(mealOptions: MealOption[]): MealOption[] {
   const seenMealIds = new Set();
 
   return mealOptions.filter((meal: MealOption) => {
@@ -128,7 +152,7 @@ export function deduplicate(mealOptions: MealOption[]) {
   })
 }
 
-export function ntfySort(left: MealOption, right: MealOption) {
+export function ntfySort(left: MealOption, right: MealOption): number {
   if (left.variant === MY_VARIANT) {
     return -1;
   }
@@ -142,9 +166,14 @@ export function ntfySort(left: MealOption, right: MealOption) {
 export function processMeals(normalizedMeals: { [index: number]: MealOption[] }) {
   return Object.fromEntries(
     Object.entries(normalizedMeals).map(
-      ([index, meals]) => [
-        index,
-        colorAttributes(deduplicate(meals).sort(ntfySort))
+      ([index, meals]) => [index,
+        colorAttributes(
+          assignScores(
+            deduplicate(
+              meals
+            )
+          ).sort(ntfySort)
+        ),
       ]
     )
   );

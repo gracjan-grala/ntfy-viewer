@@ -19,6 +19,13 @@ based on the contents of protein and saturated fats, as well as the general user
 
 ## Features
 
+### AndrzejScore™
+
+The aim of the score is to provide a single numerical value derived from the meal rating
+and its nutritional value. Ideally, meal selection can be based solely on this value.
+The score is a number roughly between 0 and 100, with higher values indicating a better meal.
+Inspect `src/lib/score.ts`'s `calculateScore` to learn how exactly it's calculated.
+
 ### Green list and red list
 
 In order to automatically color certain keywords (of the description) green and red, modify your
